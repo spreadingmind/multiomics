@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def handle_duplicates(df):
     inconsistent_patient_ids = []
 
@@ -15,15 +16,17 @@ def handle_duplicates(df):
 
     return df
 
+
 def prepare_data(path, patient_ids):
     data = pd.read_csv(path, sep=' ')
 
     data = data.T
     data.index = data.index.str.lower()
     data.index = data.index.str.replace(r'\.01$', '', regex=True)
-    
+
     data = data[data.index.isin(patient_ids)]
     return data
+
 
 def choose_common_patients(df1, df2, df3, df4):
     common_indexes = set(df1.index) & set(
