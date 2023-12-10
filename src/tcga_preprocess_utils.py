@@ -41,13 +41,22 @@ def choose_common_patients(dfs):
         df4_sync = df4[df4.index.isin(common_indexes)]
 
         return df1_sync, df2_sync, df3_sync, df4_sync
+    elif len(dfs) == 3:
+        df1, df2, df3 = dfs
+        common_indexes = set(df1.index) & set(
+            df2.index) & set(df3.index)
+
+        df1_sync = df1[df1.index.isin(common_indexes)]
+        df2_sync = df2[df2.index.isin(common_indexes)]
+        df3_sync = df3[df3.index.isin(common_indexes)]
+
+        return df1_sync, df2_sync, df3_sync
     elif len(dfs) == 6:
         df1, df2, df3, df4, df5, df6 = dfs
         common_indexes = set(df1.index) & set(
             df2.index) & set(df3.index) & set(
             df4.index) & set(df5.index) & set(
             df6.index)
-        print(common_indexes)
 
         df1_sync = df1[df1.index.isin(common_indexes)]
         df2_sync = df2[df2.index.isin(common_indexes)]
