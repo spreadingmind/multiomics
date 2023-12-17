@@ -4,6 +4,7 @@ from mofapy2.run.entry_point import entry_point
 import h5py
 import time
 
+
 def transform_df_for_mofa(df, view):
     df.reset_index(inplace=True)
     df.rename(columns={'index': 'sample'}, inplace=True)
@@ -35,7 +36,7 @@ def preprocess_data_for_mofa(df):
     return df
 
 
-def train_mofa(data_df, random_state=42, factors=10):
+def train_mofa(data_df, random_state=42, factors=10, train_params={'iter': 5000, 'convergence_mode': 'slow'}):
     ent = entry_point()
     # (2) Set data options
     # - scale_views: if views have very different ranges, one can to scale each view to unit variance
@@ -46,14 +47,9 @@ def train_mofa(data_df, random_state=42, factors=10):
     # (3) Set data using the data frame format
     ent.set_data_df(data_df)
 
-    # using default values
-    ent.set_model_options()
-
     # using personalised values
     ent.set_model_options(
         factors=factors,
-        spikeslab_weights=True,
-        ard_weights=True
     )
 
     ## (5) Set training options ##
@@ -68,9 +64,7 @@ def train_mofa(data_df, random_state=42, factors=10):
 
     # using personalised values
     ent.set_train_options(
-        iter=5000,
-        convergence_mode="slow",
-        dropR2=None,
+        **train_params,
         gpu_mode=False,
         seed=random_state
     )
