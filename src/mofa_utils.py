@@ -50,6 +50,7 @@ def train_mofa(data_df, random_state=42, factors=10, train_params={'iter': 5000,
     # using personalised values
     ent.set_model_options(
         factors=factors,
+        ard_factors=True
     )
 
     ## (5) Set training options ##
