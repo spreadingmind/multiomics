@@ -1,5 +1,6 @@
 import pandas as pd
-
+from sklearn.model_selection import train_test_split
+import numpy as np
 
 def handle_duplicates(df):
     inconsistent_patient_ids = []
@@ -66,3 +67,17 @@ def choose_common_patients(dfs):
         df6_sync = df6[df6.index.isin(common_indexes)]
 
         return df1_sync, df2_sync, df3_sync, df4_sync, df5_sync, df6_sync
+
+
+def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=42):
+    target_cancer_type = [0] * n_breast
+    target_kidney = [1] * n_kidney
+    n_samples = n_breast + n_kidney
+
+    target_cancer_type.extend(target_kidney)
+
+    indices = range(n_samples)
+    indices_train, indices_test = train_test_split(
+        indices, test_size=test_size, random_state=random_state, stratify=target_cancer_type)
+    
+    return indices_train, indices_test, np.array(target_cancer_type)
