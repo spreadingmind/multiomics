@@ -1,3 +1,19 @@
+## Project info
+1. `tcga_preprocess.ipynb`
+
+Preprocessing of 2 TCGA datasets: breast and kidney. In the result we get common data for downstream analysis with dimemtionality reduction algorithms.
+
+2. `tcga_breast_kidney_mofa.ipynb`
+
+Deriving factors from MOFA model and building cancer type binary classifier.
+
+3. `tcga_breast_kidney_rgcca.ipynb`
+
+Deriving factors from RGCCA model and building cancer type binary classifier.
+
+
+## Dimentionality Reduction Algorithms info
+
 ### MSFA
 https://github.com/rdevito/MSFA - R
 
