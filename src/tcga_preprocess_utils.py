@@ -2,6 +2,22 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 
+
+def prepare_survival_data(path, id_sep='.'):
+    survival_data = pd.read_csv(path, sep='\t')
+    survival_data['PatientID'] = survival_data['PatientID'].str.lower()
+    
+    if id_sep == '-':
+        survival_data['PatientID'] = survival_data['PatientID'].apply(lambda x: "-".join(x.split("-")[:-1]))
+        survival_data['PatientID'] = survival_data['PatientID'].str.replace('-', '.')
+
+    survival_data = handle_duplicates(survival_data)
+    survival_data = survival_data.dropna(subset=['Death'])
+    survival_data = survival_data.set_index('PatientID')
+
+    return survival_data
+
+
 def handle_duplicates(df):
     inconsistent_patient_ids = []
 
@@ -79,5 +95,5 @@ def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=42):
     indices = range(n_samples)
     indices_train, indices_test = train_test_split(
         indices, test_size=test_size, random_state=random_state, stratify=target_cancer_type)
-    
+
     return indices_train, indices_test, np.array(target_cancer_type)
