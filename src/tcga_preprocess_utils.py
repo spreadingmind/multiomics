@@ -13,9 +13,24 @@ def prepare_survival_data(path, id_sep='.'):
 
     survival_data = handle_duplicates(survival_data)
     survival_data = survival_data.dropna(subset=['Death'])
-    survival_data = survival_data.set_index('PatientID')
 
+    survival_data = survival_data.set_index('PatientID')
+    survival_data = survival_data.sort_index()
     return survival_data
+
+def prepare_clinical_data(path):
+    clinical_data = pd.read_csv(path, sep='\t')
+    clinical_data['sampleID'] = clinical_data['sampleID'].str.lower()
+    
+    clinical_data['sampleID'] = clinical_data['sampleID'].apply(lambda x: "-".join(x.split("-")[:-1]))
+    clinical_data['sampleID'] = clinical_data['sampleID'].str.replace('-', '.')
+
+    clinical_data = clinical_data.drop_duplicates(subset='sampleID')
+
+    clinical_data = clinical_data.set_index('sampleID')
+    clinical_data = clinical_data.sort_index()
+
+    return clinical_data
 
 
 def handle_duplicates(df):
@@ -43,6 +58,7 @@ def prepare_data(path, patient_ids=None):
 
     if patient_ids is not None:
         data = data[data.index.isin(patient_ids)]
+    data = data.sort_index()
     return data
 
 
@@ -97,3 +113,9 @@ def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=42):
         indices, test_size=test_size, random_state=random_state, stratify=target_cancer_type)
 
     return indices_train, indices_test, np.array(target_cancer_type)
+
+def split_patients_for_survival_prediction(survival_df, test_size=0.25, random_state=42):
+    indices_train, indices_test = train_test_split(
+        survival_df.index, test_size=test_size, random_state=random_state, stratify=survival_df['Death'])
+
+    return indices_train, indices_test
