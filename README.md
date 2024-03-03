@@ -13,15 +13,42 @@ Deriving factors from statistical models and building cancer survival regressor.
 
 ## Relevant papers and tools
 
-- [ ] Benchmarking joint multi-omics dimensionality reduction approaches for the study of cancer: https://www.nature.com/articles/s41467-020-20430-7
+- [x] Benchmarking joint multi-omics dimensionality reduction approaches for the study of cancer: https://www.nature.com/articles/s41467-020-20430-7
+    - Наша первая исходная ознакомительная статья
+    - Ссылка на датасет TCGA
 
-- [ ] BENCHMARKING OF JOINT DIMENSIONALITY REDUCTION METHODS FOR THE ANALYSIS OF MULTI-OMICS DATA IN CANCER: https://libstore.ugent.be/fulltxt/RUG01/003/008/173/RUG01-003008173_2021_0001_AC.pdf
+- [x] BENCHMARKING OF JOINT DIMENSIONALITY REDUCTION METHODS FOR THE ANALYSIS OF MULTI-OMICS DATA IN CANCER: https://libstore.ugent.be/fulltxt/RUG01/003/008/173/RUG01-003008173_2021_0001_AC.pdf
+    - 2nd dataset: The Cancer Cell Line Encyclopedia (CCLE) dataset: https://sites.broadinstitute.org/ccle/datasets
+    - TCGA clinical data provides survival time in days from the initial pathological diagnosis until the death of a patient (TCGA metadata, n.d.). Survival data is stored as “days
+    - Делали survival analysis по факторам от jDR (см секцию 3.2 Association of jDR factors with survival, page 31):
+    Cox proportional hazards regression model was used to testing the association between survival and jDR factors because the model allows us to test the association between several risk factors and survival. “Coxph” function provided by the “survival” package in R was used to fit the models. P-values indicating the association between the factors to survival were adjusted for multiple testing by using the Bonferroni correction.
 
-- [ ] A benchmark study s multi-omics data fusion methods for cancer: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02739-2
+- [x] A benchmark study s multi-omics data fusion methods for cancer: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02739-2
+    - Много разных моделей, пока ничего не поняла. Но есть обзоры и много ссылок, может пригодится текст
+    - Кода нет
 
-- [ ] MUON: multimodal omics analysis framework: https://link.springer.com/article/10.1186/s13059-021-02577-8
+- [x] MUON: multimodal omics analysis framework: https://link.springer.com/article/10.1186/s13059-021-02577-8
+    - Библиотека python для визуализации, анализа
+    - Пример анализа на факторов: https://muon-tutorials.readthedocs.io/en/latest/CLL.html?highlight=factor, https://muon-tutorials.readthedocs.io/en/latest/mefisto/2-MEFISTO-microbiome.html?highlight=factor
+
+- [x] Capsule Network Based Modeling of Multi-omics Data for Discovery of Breast Cancer-Related Genes: https://ieeexplore.ieee.org/document/8684326
+    - Задача классификации, использовали ML-метрики, сравнивали с классическими моделями
+    - Данные и веса не доступны - ссылки не рабочие
+
+- [x] Learning Cell-Type-Specific Gene Regulation Mechanisms by Multi-Attention Based Deep Learning With Regulatory Latent Space: https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2020.00869/full
+    - To begin, separate models embed histone marks, DNA methylation, and transcription factors into a regulatory latent space. First, histone marks are embedded into the latent space by a Convolutional Neural Network (CNN) followed by a Bi-directional Long Short-Term Memory (LSTM) network with attention. Second, DNA methylation is vectorized by a Dynamic Bi-directional LSTM with attention. Lastly, a Self-Attention Network (SAN) embeds the transcription factors. After embedding features in three vectors, a Multi-Attention network combines these vectors to predict whether a gene would be highly expressed or lowly expressed.
+    - Данные: Roadmap Epigenomics Projects
+    - Код: https://github.com/pptnz/deeply-learning-regulatory-latent-space
+
+- [x] Survival Analysis concepts: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394262/#:~:text=Survival%20analysis%20is%20a%20collection,interest%20will%20often%20be%20unknown
+    - Survival analysis is a collection of statistical procedures for data analysis where the outcome variable of interest is time until an event occurs. Because of censoring–the nonobservation of the event of interest after a period of follow-up–a proportion of the survival times of interest will often be unknown. It is assumed that those patients who are censored have the same survival prospects as those who continue to be followed, that is, the censoring is uninformative. Survival data are generally described and modelled in terms of two related functions, the survivor function and the hazard function. The survivor function represents the probability that an individual survives from the time of origin to some time beyond time t. It directly describes the survival experience of a study cohort, and is usually estimated by the KM method. The logrank test may be used to test for differences between survival curves for groups, such as treatment arms. The hazard function gives the instantaneous potential of having an event at a time, given survival up to that time. It is used primarily as a diagnostic tool or for specifying a mathematical model for survival analysis. In comparing treatments or prognostic groups in terms of survival, it is often necessary to adjust for patient-related factors that could potentially affect the survival time of a patient. Failure to adjust for confounders may result in spurious effects. Multivariate survival analysis, a form of multiple regression, provides a way of doing this adjustment, and is the subject the next paper in this series.
+
+- [ ] Stacked Autoencoder Based Multi-Omics Data Integration for Cancer Survival Prediction: https://arxiv.org/abs/2207.04878
+    - 
 
 - [ ] Deep Learning–Based Multi-Omics Integration Robustly Predicts Survival in Liver Cancer: https://aacrjournals.org/clincancerres/article/24/6/1248/475/Deep-Learning-Based-Multi-Omics-Integration
+    - This DL-based model provides two optimal subgroups of patients with significant survival differences (P = 7.13e−6) and good model fitness [concordance index (C-index) = 0.68].
+    - 5 других датасетов: We validated this multi-omics model on five external datasets of various omics types: LIRI-JP cohort (n = 230, C-index = 0.75), NCI cohort (n = 221, C-index = 0.67), Chinese cohort (n = 166, C-index = 0.69), E-TABM-36 cohort (n = 40, C-index = 0.77), and Hawaiian cohort (n = 27, C-index = 0.82).
 
 - [ ] Multi-omics integration method based on attention deep learning network for biomedical data classification: https://www.sciencedirect.com/science/article/abs/pii/S0169260723000445
 
