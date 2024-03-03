@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier, CatBoostRegressor
 from sklearn.metrics import roc_auc_score, roc_curve, mean_absolute_percentage_error
+from sksurv.metrics import concordance_index_censored
 
 
 def classification_pipeline(
@@ -143,13 +144,21 @@ def regression_pipeline(
     # metrics for factors-only dataframe
     mape_factors = mean_absolute_percentage_error(
         y_true=y_test, y_pred=y_pred_factors) * 100
+    c_index_factors = concordance_index_censored(survival_data_breast['Death'][TEST_INDICES].astype(bool), y_test, 1 / y_pred_factors)[0]
 
     # metrics for combined dataframe
     mape_combined = mean_absolute_percentage_error(
         y_true=y_test, y_pred=y_pred_combined) * 100
+    c_index_combined = concordance_index_censored(survival_data_breast['Death'][TEST_INDICES].astype(bool), y_test, 1 / y_pred_combined)[0]
     
+    metrics = {
+        'MAPE_f': mape_factors,
+        'MAPE_f_c': mape_combined,
+        'C-index_f': c_index_factors,
+        'C-index_f_c': c_index_combined,
+    }
     if not plot_feat_imp:
-        return mape_factors, mape_combined
+        return metrics
     # Plotting setup
     plt.figure(figsize=(20, 12))
 
@@ -186,4 +195,4 @@ def regression_pipeline(
     plt.tight_layout()
     plt.show()
 
-    return mape_factors, mape_combined, feature_importances_factors, feature_importances_combined
+    return metrics
