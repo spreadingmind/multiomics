@@ -47,15 +47,21 @@ Deriving factors from statistical models and building cancer survival regressor.
     - This DL-based model provides two optimal subgroups of patients with significant survival differences (P = 7.13e−6) and good model fitness [concordance index (C-index) = 0.68].
     - 5 других датасетов: We validated this multi-omics model on five external datasets of various omics types: LIRI-JP cohort (n = 230, C-index = 0.75), NCI cohort (n = 221, C-index = 0.67), Chinese cohort (n = 166, C-index = 0.69), E-TABM-36 cohort (n = 40, C-index = 0.77), and Hawaiian cohort (n = 27, C-index = 0.82).
 
-- [ ] Stacked Autoencoder Based Multi-Omics Data Integration for Cancer Survival Prediction: https://arxiv.org/abs/2207.04878
+- [x] Stacked Autoencoder Based Multi-Omics Data Integration for Cancer Survival Prediction: https://arxiv.org/abs/2207.04878
+    - 3 типа рака из TCGA, лучшие С-index в районе 0.6-0.7
+    - Модель отдельно для каждого рака
 
-- [ ] Multi-omics integration method based on attention deep learning network for biomedical data classification: https://www.sciencedirect.com/science/article/abs/pii/S0169260723000445
+- [x] Dealing with dimensionality: the application of machine learning to multi-omics data: https://academic.oup.com/bioinformatics/article/39/2/btad021/6986971
+    - Ссылки на статьи новые
+    - Attention mechanisms показали лучшие результаты (??)
 
-- [ ] Dealing with dimensionality: the application of machine learning to multi-omics data: https://academic.oup.com/bioinformatics/article/39/2/btad021/6986971
-
-- [ ] An in-depth comparison of linear and non-linear joint embedding methods for bulk and single-cell multi-omics:
+ - [x] Multi-level attention graph neural network based on co-expression gene modules for disease diagnosis and prognosis: https://academic.oup.com/bioinformatics/article/38/8/2178/6528315
+    - https://github.com/TencentAILabHealthcare/MLA-GNN
+    - Графовая НС
+    
+- [x] An in-depth comparison of linear and non-linear joint embedding methods for bulk and single-cell multi-omics:
  https://academic.oup.com/bib/article/25/1/bbad416/7450271 
-
+    - Оч свежая, Jan 2024, описания автоэнкодеров
 
 ### RGCCA
 https://github.com/rgcca-factory/RGCCA - R
