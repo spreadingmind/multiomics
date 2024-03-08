@@ -1,3 +1,5 @@
 catboost_info/*
 data/outputs/*
 *.pyc
+data/transformers-train/*
+wandb/
