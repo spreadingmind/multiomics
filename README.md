@@ -46,6 +46,8 @@ Deriving factors from statistical models and building cancer survival regressor.
 - [x] Deep Learning–Based Multi-Omics Integration Robustly Predicts Survival in Liver Cancer: https://aacrjournals.org/clincancerres/article/24/6/1248/475/Deep-Learning-Based-Multi-Omics-Integration
     - This DL-based model provides two optimal subgroups of patients with significant survival differences (P = 7.13e−6) and good model fitness [concordance index (C-index) = 0.68].
     - 5 других датасетов: We validated this multi-omics model on five external datasets of various omics types: LIRI-JP cohort (n = 230, C-index = 0.75), NCI cohort (n = 221, C-index = 0.67), Chinese cohort (n = 166, C-index = 0.69), E-TABM-36 cohort (n = 40, C-index = 0.77), and Hawaiian cohort (n = 27, C-index = 0.82).
+    - Their benchmarking method: 
+    In step 1, mRNA, DNA methylation, and miRNA features from the TCGA HCC cohort are stacked up /_note: concatenated_/ as input features for the autoencoder, a DL method  /_note: with 1 hidden layer, 50% dropout_/; then each of the new, transformed features in the bottleneck layer of the autoencoder is then subjected to single variate Cox-PH models to select the features associated with survival; then K-mean clustering is applied to samples represented by these features to identify survival-risk groups. In step 2, mRNA, methylation, and miRNA input features are ranked by ANOVA test F values, those features that are in common with the predicting dataset are selected, then the top features are used to build an SVM model(s) to predict the survival-risk labels of new datasets.
 
 - [x] Stacked Autoencoder Based Multi-Omics Data Integration for Cancer Survival Prediction: https://arxiv.org/abs/2207.04878
     - 3 типа рака из TCGA, лучшие С-index в районе 0.6-0.7
@@ -77,17 +79,18 @@ such as multiview multidimensional scaling (Trendafilov 2010).
 
 ## Текущий статус / вопросы
 
-1. Есть ли точно уверенность что эта проблема актуальная?
-WIP: в процессе обзор статей
-
-2. Сформулировать цель исследования
+1. Сформулировать цель исследования
 Сравнить классические unsupervised методы / DL-методы jDR по предсказанию выживаемости (оставшееся время жизни)
 
-3. Фиксируем ли текущий пайплайн анализа?
-Поменять на регрессию
-
-4. Дедлайн для исследования для диплома
+2. Дедлайн для исследования для диплома
 Конец марта
 
-5. Литература на которой основываться
+3. Литература на которой основываться
 Методы DL для cancer survival prediction
+
+#### ToDo:
+    - [ ] добавить mean С-index
+    - [ ] добавить UMAP
+    - [x] найти понятную имплементацию автоэнкодера в статье, их скор, и либо изменить свой, либо сравнить или показать чем лучше - Liver TCGA
+    - [ ] НС с self-attention
+    - [ ] сделать предсказания без 2х клин фичей про метастазы

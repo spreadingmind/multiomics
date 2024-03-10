@@ -31,12 +31,12 @@ def classification_pipeline(
 
     # Classifier for combined dataframe
     cb_classifier_combined = CatBoostClassifier(
-        n_estimators=5000, random_state=RANDOM_STATE, silent=True, cat_features=cat_features_indices)
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True, cat_features=cat_features_indices)
     cb_classifier_combined.fit(X_train, y_train)
 
     # Classifier for factors-only dataframe
     cb_classifier_factors = CatBoostClassifier(
-        n_estimators=5000, random_state=RANDOM_STATE, silent=True)
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True)
     cb_classifier_factors.fit(X_train_factors, y_train)
 
     # Predictions and evaluations for combined dataframe
@@ -50,7 +50,7 @@ def classification_pipeline(
     roc_auc_factors = roc_auc_score(y_test, y_probas_factors[:, 1])
 
     # Plotting setup
-    plt.figure(figsize=(20, 12))
+    plt.figure(figsize=(16, 8))
 
     # ROC-AUC for factors-only dataframe
     fpr_factors, tpr_factors, thresholds_factors = roc_curve(
@@ -132,12 +132,12 @@ def regression_pipeline(
 
     # Regressor for combined dataframe
     cb_regressor_combined = CatBoostRegressor(
-        n_estimators=5000, random_state=RANDOM_STATE, silent=True, cat_features=cat_features_indices)
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True, cat_features=cat_features_indices)
     cb_regressor_combined.fit(X_train, y_train)
 
     # Regressor for factors-only dataframe
     cb_regressor_factors = CatBoostRegressor(
-        n_estimators=5000, random_state=RANDOM_STATE, silent=True)
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True)
     cb_regressor_factors.fit(X_train_factors, y_train)
 
     # Predictions and evaluations for combined dataframe
@@ -167,7 +167,7 @@ def regression_pipeline(
     if not plot_feat_imp:
         return metrics
     # Plotting setup
-    plt.figure(figsize=(20, 12))
+    plt.figure(figsize=(16, 8))
 
     # Feature importances for factors-only dataframe
     feature_importances_factors = cb_regressor_factors.get_feature_importance()
@@ -295,7 +295,7 @@ def cox_regression_pipeline(
         TRAIN_INDICES], factors_df.loc[TEST_INDICES]
     # Model for combined dataframe
     cox_model_combined = make_pipeline(
-        OneHotEncoder(), CoxPHSurvivalAnalysis(alpha=0.5, n_iter=5000))
+        OneHotEncoder(), CoxPHSurvivalAnalysis(alpha=0.5, n_iter=1000))
     cox_model_combined.fit(X_train, y_train)
 
     # Model for factors-only dataframe
