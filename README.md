@@ -89,8 +89,6 @@ such as multiview multidimensional scaling (Trendafilov 2010).
 Методы DL для cancer survival prediction
 
 #### ToDo:
-    - [ ] добавить mean С-index
-    - [ ] добавить UMAP
-    - [x] найти понятную имплементацию автоэнкодера в статье, их скор, и либо изменить свой, либо сравнить или показать чем лучше - Liver TCGA
     - [ ] НС с self-attention
     - [ ] сделать предсказания без 2х клин фичей про метастазы
+    - [ ] сделать автоэнкодеры по всем данным
