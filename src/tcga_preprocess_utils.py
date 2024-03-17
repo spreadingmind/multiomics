@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 
+RANDOM_STATE = 42
 
 def prepare_survival_data(path, id_sep='.'):
     survival_data = pd.read_csv(path, sep='\t')
@@ -101,7 +102,7 @@ def choose_common_patients(dfs):
         return df1_sync, df2_sync, df3_sync, df4_sync, df5_sync, df6_sync
 
 
-def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=42):
+def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=RANDOM_STATE):
     target_cancer_type = [0] * n_breast
     target_kidney = [1] * n_kidney
     n_samples = n_breast + n_kidney
@@ -114,8 +115,8 @@ def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=42):
 
     return indices_train, indices_test, np.array(target_cancer_type)
 
-def split_patients_for_survival_prediction(survival_df, test_size=0.25, random_state=42):
+def split_patients_for_target_prediction(target_df, test_size=0.25, random_state=RANDOM_STATE, stratify_by='Death'):
     indices_train, indices_test = train_test_split(
-        survival_df.index, test_size=test_size, random_state=random_state, stratify=survival_df['Death'])
+        target_df.index, test_size=test_size, random_state=random_state, stratify=target_df[stratify_by])
 
     return indices_train, indices_test

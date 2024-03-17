@@ -1,1 +1,3 @@
 RANDOM_STATE = 42
+
+CANCER_SUBTYPE_FEATURE = 'histological_type'

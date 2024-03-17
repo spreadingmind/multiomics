@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier, CatBoostRegressor
-from sklearn.metrics import roc_auc_score, roc_curve, mean_absolute_percentage_error
+from sklearn.metrics import roc_auc_score, roc_curve, mean_absolute_percentage_error, classification_report
 from sksurv.metrics import concordance_index_censored
 from sksurv.linear_model import CoxPHSurvivalAnalysis
 from sklearn.pipeline import make_pipeline
@@ -109,6 +109,84 @@ def classification_pipeline(
     plt.show()
 
     return roc_auc_factors, roc_auc_combined, feature_importances_factors, feature_importances_combined,
+
+
+def subtype_classification_pipeline(
+        factors, clinical_features, cancer_subtype_data_breast, TRAIN_INDICES, TEST_INDICES,
+        RANDOM_STATE, N_FACTORS, N_NUMERIC_CLINICAL, CLINICAL_FEATURES, plot_feat_imp=True):
+    # Original combined dataframe
+    combined_df = pd.concat([pd.DataFrame(factors), clinical_features], axis=1)
+    cat_features_indices = list(
+        range(N_FACTORS + N_NUMERIC_CLINICAL, combined_df.shape[1]))
+
+    # Factors-only dataframe
+    factors_df = pd.DataFrame(factors)
+
+    # Split for combined dataframe
+    X_train, X_test, y_train, y_test = combined_df.values[TRAIN_INDICES], combined_df.values[
+        TEST_INDICES], cancer_subtype_data_breast.iloc[TRAIN_INDICES], cancer_subtype_data_breast.iloc[TEST_INDICES]
+
+    # Split for factors-only dataframe
+    X_train_factors, X_test_factors = factors_df.values[
+        TRAIN_INDICES], factors_df.values[TEST_INDICES]
+
+    # Classifier for combined dataframe
+    cb_classifier_combined = CatBoostClassifier(
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True, cat_features=cat_features_indices)
+    cb_classifier_combined.fit(X_train, y_train)
+
+    # Classifier for factors-only dataframe
+    cb_classifier_factors = CatBoostClassifier(
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True)
+    cb_classifier_factors.fit(X_train_factors, y_train)
+
+    # Predictions and evaluations for combined dataframe
+    y_pred_combined = cb_classifier_combined.predict(X_test)
+    report_combined = classification_report(y_test, y_pred_combined, output_dict=True)
+
+    # Predictions and evaluations for factors-only dataframe
+    y_pred_factors = cb_classifier_factors.predict(X_test_factors)
+    report_factors = classification_report(y_test, y_pred_factors, output_dict=True)
+
+    if not plot_feat_imp:
+        return report_factors, report_combined
+
+    plt.figure(figsize=(16, 8))    
+
+    # Feature importances for factors-only dataframe
+    feature_importances_factors = cb_classifier_factors.get_feature_importance()
+    importances_factors = pd.DataFrame({'Feature': [f'Factor {i+1}' for i in range(
+        len(feature_importances_factors))], 'Importance': feature_importances_factors})
+    importances_factors = importances_factors.sort_values(
+        by='Importance', ascending=False)
+
+    plt.subplot(2, 2, 4)
+    plt.bar(importances_factors['Feature'],
+            importances_factors['Importance'], color='blue')
+    plt.xticks(rotation=90)
+    plt.title('Feature Importances Factors Only')
+    plt.ylabel('Importance')
+
+    # Feature importances for combined dataframe
+    feature_importances_combined = cb_classifier_combined.get_feature_importance()
+    feature_names = [
+        f'Factor {i+1}' for i in range(N_FACTORS)] + CLINICAL_FEATURES
+    importances_combined = pd.DataFrame(
+        {'Feature': feature_names, 'Importance': feature_importances_combined})
+    importances_combined = importances_combined.sort_values(
+        by='Importance', ascending=False)
+
+    plt.subplot(2, 2, 3)
+    plt.bar(importances_combined['Feature'], importances_combined['Importance'], color=np.where(
+        importances_combined['Feature'].str.startswith('Factor'), 'red', 'blue'))
+    plt.xticks(rotation=90)
+    plt.title('Feature Importances Combined')
+    plt.ylabel('Importance')
+
+    plt.tight_layout()
+    plt.show()
+
+    return report_factors, report_combined, feature_importances_factors, feature_importances_combined,
 
 
 def regression_pipeline(
