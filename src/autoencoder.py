@@ -14,29 +14,23 @@ class Autoencoder(nn.Module):
         super(Autoencoder, self).__init__()
 
         dna_encoder = nn.Sequential(
-            nn.Linear(input_dims[0], 512),
-            nn.BatchNorm1d(512),
-            nn.ReLU(),
-            nn.Linear(512, 128),
+            nn.Linear(input_dims[0], 128),
             nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Dropout(0.5)
+            nn.Dropout(0.3)
         )
 
         rna_encoder = nn.Sequential(
             nn.Linear(input_dims[1], 128),
             nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Dropout(0.5)
+            nn.Dropout(0.3)
         )
         met_encoder = nn.Sequential(
-            nn.Linear(input_dims[2], 512),
-            nn.BatchNorm1d(512),
-            nn.ReLU(),
-            nn.Linear(512, 128),
+            nn.Linear(input_dims[2], 128),
             nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Dropout(0.5)
+            nn.Dropout(0.3)
         )
 
         self.encoder = nn.ModuleList([dna_encoder, rna_encoder, met_encoder])
