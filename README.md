@@ -89,5 +89,3 @@ such as multiview multidimensional scaling (Trendafilov 2010).
 Методы DL для cancer survival prediction
 
 #### ToDo:
-    - [ ] НС с self-attention
-    - [ ] сделать автоэнкодеры по всем данным (?)

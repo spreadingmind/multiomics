@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier, CatBoostRegressor
-from sklearn.metrics import roc_auc_score, roc_curve, mean_absolute_percentage_error, classification_report
+from sklearn.metrics import roc_auc_score, roc_curve, mean_absolute_percentage_error, classification_report, mean_squared_error
 from sksurv.metrics import concordance_index_censored
 from sksurv.linear_model import CoxPHSurvivalAnalysis
 from sklearn.pipeline import make_pipeline
@@ -396,4 +396,57 @@ def cox_regression_pipeline(
         'C-index_f': c_index_factors,
         'C-index_f_c': c_index_combined,
     }
+    return metrics
+
+
+def regression_pipeline_gdsc(
+        factors, target_data, TRAIN_INDICES, TEST_INDICES,
+        RANDOM_STATE, plot_feat_imp=True):
+    factors_df = pd.DataFrame(factors)
+
+    y_train, y_test = target_data['LN_IC50'][TRAIN_INDICES], target_data['LN_IC50'][TEST_INDICES]
+
+    X_train_factors, X_test_factors = factors_df.values[
+        TRAIN_INDICES], factors_df.values[TEST_INDICES]
+
+    # Regressor for factors-only dataframe
+    cb_regressor_factors = CatBoostRegressor(
+        n_estimators=1000, random_state=RANDOM_STATE, silent=True)
+    cb_regressor_factors.fit(X_train_factors, y_train)
+
+    # Predictions and evaluations for factors-only dataframe
+    y_pred_factors = cb_regressor_factors.predict(X_test_factors)
+
+    # metrics for factors-only dataframe
+    mape_factors = mean_absolute_percentage_error(
+        y_true=y_test, y_pred=y_pred_factors) * 100
+
+    rmse_factors =  mean_squared_error(y_true=y_test, y_pred=y_pred_factors, squared=False)
+
+    metrics = {
+        'MAPE_f': mape_factors,
+        'RMSE_f': rmse_factors,
+    }
+    if not plot_feat_imp:
+        return metrics
+    # Plotting setup
+    plt.figure(figsize=(8, 6))
+
+    # Feature importances for factors-only dataframe
+    feature_importances_factors = cb_regressor_factors.get_feature_importance()
+    importances_factors = pd.DataFrame({'Feature': [f'Factor {i+1}' for i in range(
+        len(feature_importances_factors))], 'Importance': feature_importances_factors})
+    importances_factors = importances_factors.sort_values(
+        by='Importance', ascending=False)
+
+    plt.subplot(2, 2, 4)
+    plt.bar(importances_factors['Feature'],
+            importances_factors['Importance'], color='blue')
+    plt.xticks(rotation=90)
+    plt.title('Feature Importances Factors Only')
+    plt.ylabel('Importance')
+
+    plt.tight_layout()
+    plt.show()
+
     return metrics

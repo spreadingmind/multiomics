@@ -116,7 +116,10 @@ def split_patients(n_breast=685, n_kidney=208, test_size=0.25, random_state=RAND
     return indices_train, indices_test, np.array(target_cancer_type)
 
 def split_patients_for_target_prediction(target_df, test_size=0.25, random_state=RANDOM_STATE, stratify_by='Death'):
+    stratify = None
+    if stratify_by:
+        stratify = target_df[stratify_by]
     indices_train, indices_test = train_test_split(
-        target_df.index, test_size=test_size, random_state=random_state, stratify=target_df[stratify_by])
+        target_df.index, test_size=test_size, random_state=random_state, stratify=stratify)
 
     return indices_train, indices_test
