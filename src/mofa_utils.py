@@ -60,14 +60,12 @@ def train_mofa(data_df, random_state=42, factors=10, train_params={'iter': 5000,
     # - gpu_mode: use GPU mode? this functionality needs cupy installed and a functional GPU, see https://biofam.github.io/MOFA2/gpu_training.html
     # - seed: random seed
 
-    # using default values
-    ent.set_train_options()
-
     # using personalised values
     ent.set_train_options(
         **train_params,
         gpu_mode=False,
-        seed=random_state
+        seed=random_state,
+        quiet=True
     )
 
     ####################################

@@ -6,9 +6,6 @@ from torch.utils.data import TensorDataset, DataLoader
 from transformers import Trainer, TrainingArguments, set_seed
 from datasets import Dataset
 from torch.utils.data.dataloader import default_collate
-
-
-
 class Autoencoder(nn.Module):
     def __init__(self, input_dims, n_out):
         super(Autoencoder, self).__init__()
@@ -102,8 +99,11 @@ class EncoderPipeline():
             self.input_dims, n_out) if base else Autoencoder(self.input_dims, n_out)
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
+        self.train_loader = self.create_loader(self.modalities)
+
+    def create_loader(self, modalities):
         dna_train, rna_train, methylation_train = [
-            torch.tensor(mod, dtype=torch.float32) for mod in self.modalities
+            torch.tensor(mod, dtype=torch.float32) for mod in modalities
         ]
         data = []
         for i in range(dna_train.shape[0]):
@@ -113,10 +113,11 @@ class EncoderPipeline():
         self.train_dataset.set_format(type='torch', columns=['inputs'])
 
         tensor_dataset = TensorDataset(dna_train, rna_train, methylation_train)
-        self.train_loader = DataLoader(
+        train_loader = DataLoader(
             tensor_dataset, batch_size=32, shuffle=False)
+        return train_loader
 
-    def train(self):
+    def fit(self):
         random.seed(self.random_state)
         np.random.seed(self.random_state)
         torch.manual_seed(self.random_state)
@@ -133,10 +134,9 @@ class EncoderPipeline():
             per_device_eval_batch_size=16,
             warmup_steps=100,
             weight_decay=0.01,
-            logging_dir='data/transformers-train/results/logs',
-            logging_steps=10,
             save_total_limit=1,
-            lr_scheduler_type='linear'
+            lr_scheduler_type='linear',
+            logging_strategy="no"
         )
         trainer = Trainer(
             model=self.model,
@@ -144,15 +144,16 @@ class EncoderPipeline():
             train_dataset=self.train_dataset,
             data_collator=custom_collate_fn
         )
-
+        
         trainer.train()
 
-    def encode(self):
+    def transform(self, modalities=None):
         self.model.to(self.device)
         self.model.eval()
         output = []
         with torch.no_grad():
-            for data in self.train_loader:
+            to_transform = self.train_loader if not modalities else self.create_loader(modalities)
+            for data in to_transform:
                 inputs = [modality.to(self.device) for modality in data]
                 outputs = self.model.encode(inputs)
                 output.append(outputs.cpu())
